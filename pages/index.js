@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 
 import Layout from '../components/layout'
 
-export default function Home() {
+export default function Home({jsonResp}) {
     return (
         <Layout>
             <div className={styles.container}>
@@ -16,7 +16,7 @@ export default function Home() {
 
                 <main className={styles.main}>
                     <h1 className={styles.title}>
-                        Welcome to <a href="https://nextjs.org">Next.js!</a>
+                        Welcome to <a href="https://nextjs.org">Next.js! {jsonResp.title}</a>
                     </h1>
 
                     <p className={styles.description}>
@@ -51,6 +51,9 @@ export default function Home() {
                             <p>
                                 Instantly deploy your Next.js site to a public URL with Vercel.
                             </p>
+                            <p>
+
+                            </p>
                         </a>
                     </div>
                 </main>
@@ -70,4 +73,25 @@ export default function Home() {
             </div>
         </Layout>
     )
+}
+
+export async function getStaticProps() {
+    const endpoint = 'https://jsonplaceholder.typicode.com/todos/1'
+    let jsonResp = ''
+    try {
+        const res = await fetch(endpoint)
+        jsonResp = await res.json()
+    } catch (e) {
+        console.log(e)
+    }
+
+    return {
+        props: {
+            jsonResp,
+        },
+        // Next.js will attempt to re-generate the page:
+        // - When a request comes in
+        // - At most once every 10 seconds
+        revalidate: 10, // In seconds
+    }
 }
